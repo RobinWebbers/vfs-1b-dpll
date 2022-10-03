@@ -68,5 +68,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - monads
-    - hspec
+    - hspec >=2.10.6
     - HUnit

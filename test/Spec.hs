@@ -1,4 +1,6 @@
 import Test.Hspec
+import Test.Hspec.Runner
+import System.Environment
 
 -- Monad imports
 import qualified MaybeSpec
@@ -32,4 +34,10 @@ tests :: Spec
 tests = monads >> sat
 
 main :: IO ()
-main = hspec tests
+main = do
+  args <- getArgs
+  cfg <- readConfig defaultConfig args
+  (cfg', spec) <- evalSpec cfg tests
+  result <- withArgs [] $ runSpecForest spec cfg'
+  print result
+  evaluateResult result
