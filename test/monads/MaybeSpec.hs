@@ -4,10 +4,12 @@ module MaybeSpec
 
 import Test.Hspec
 import Test.HUnit
+import Rubric
+
 import qualified Maybe
 
-testOneEighth :: (Int -> Maybe Int) -> Spec
-testOneEighth oneEighth =
+testOneEighth :: (Int -> Maybe Int) -> Rubric
+testOneEighth oneEighth = passOrFail $ do
   it "correctly computes" $ do
     oneEighth   8 @?= Just 1
     oneEighth  64 @?= Just 8
@@ -16,9 +18,9 @@ testOneEighth oneEighth =
     oneEighth  36 @?= Nothing
     oneEighth 353 @?= Nothing
 
-tests :: Spec
-tests = do
-  describe "half" $ do
+tests :: Rubric
+tests = distribute $ do
+  distributed "half" . passOrFail $ do
     it "takes half if even" $ do
       Maybe.half  8 @?= Just  4
       Maybe.half 32 @?= Just 16
@@ -27,6 +29,6 @@ tests = do
       Maybe.half  7 @?= Nothing
       Maybe.half 51 @?= Nothing
       Maybe.half 23 @?= Nothing
-  describe "oneEighth"   $ testOneEighth Maybe.oneEighth
-  describe "oneEighth'"  $ testOneEighth Maybe.oneEighth'
-  describe "oneEighth''" $ testOneEighth Maybe.oneEighth''
+  distributed "oneEighth"   $ testOneEighth Maybe.oneEighth
+  distributed "oneEighth'"  $ testOneEighth Maybe.oneEighth'
+  distributed "oneEighth''" $ testOneEighth Maybe.oneEighth''

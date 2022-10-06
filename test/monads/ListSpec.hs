@@ -4,6 +4,8 @@ module ListSpec
 
 import Test.Hspec
 import Test.HUnit
+import Rubric
+
 import qualified List
 import List (Sheep (..))
 
@@ -14,7 +16,7 @@ fathersInf = Sheep Nothing (Just fathersInf)
 bothInf    = Sheep (Just bothInf) (Just bothInf)
 
 limit :: Int -> Sheep -> Sheep
-limit 0 _                         = Sheep Nothing Nothing
+limit 0 _           = Sheep Nothing Nothing
 limit n (Sheep m f) = Sheep (m >>= limit') (f >>= limit')
   where
     limit' = return . limit (n - 1)
@@ -24,8 +26,8 @@ mothersD2 = limit 2 mothersInf
 fathersD2 = limit 2 fathersInf
 bothD2    = limit 2 bothInf
 
-testGgParents :: (Sheep -> [Sheep]) -> Spec
-testGgParents ggParents = 
+testGgParents :: (Sheep -> [Sheep]) -> Rubric
+testGgParents ggParents = passOrFail $ do
   it "lists all great grandparents" $ do
     let s0 = Sheep (Just bothD2)    (Just mothersD2)
     let s1 = Sheep (Just fathersD2) (Just mothersD2)
@@ -35,13 +37,13 @@ testGgParents ggParents =
     ggParents s1        @?= replicate 2 orphan
     ggParents s2        @?= replicate 5 orphan
 
-tests :: Spec
-tests = do
-  describe "parents" $ do
+tests :: Rubric
+tests = distribute $ do
+  distributed "parents" . passOrFail $ do
     it "correct number of parents" $ do
       List.parents orphan                                @?= []
       List.parents (Sheep (Just orphan)  Nothing      )  @?= [orphan]
       List.parents (Sheep Nothing        (Just orphan))  @?= [orphan]
       List.parents (Sheep (Just orphan)  (Just orphan))  @?= [orphan, orphan]
-  describe "ggParents"  $ testGgParents List.ggParents
-  describe "ggParents'" $ testGgParents List.ggParents'
+  distributed "ggParents"  $ testGgParents List.ggParents
+  distributed "ggParents'" $ testGgParents List.ggParents'

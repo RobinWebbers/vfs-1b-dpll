@@ -4,6 +4,7 @@ module TseitinSpec
 
 import Test.Hspec
 import Test.HUnit
+import Rubric
 
 import Data.List (find)
 import qualified Tseitin
@@ -12,9 +13,9 @@ import CNF
 
 import Parser (parse)
 
-tests :: Spec
+tests :: Rubric
 tests = do
-  describe "tseitin" $ do
+  criterion "tseitin" 1 . passOrFail $ do
     it "has correct lit case" $ do
       let And ands = Tseitin.equisat $ P.Lit 0
       length ands @?= 1

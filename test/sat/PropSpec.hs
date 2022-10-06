@@ -4,6 +4,7 @@ module PropSpec
 
 import Test.Hspec
 import Test.HUnit
+import Rubric
 
 import qualified Prop
 import Prop (Prop (..), (-->), (<->))
@@ -23,18 +24,18 @@ isLit (Lit _)       = True
 isLit (Neg (Lit _)) = True
 isLit _             = False
 
-tests :: Spec
+tests :: Rubric
 tests = do
-  describe "-->" $ do
+  criterion "-->" 0.1 . passOrFail $ do
     it "is defined in terms of Neg and :|:" $ do
       Lit 0 --> Lit 1 @?= Neg (Lit 0) :|: Lit 1
       let p = Lit 0 :&: Lit 1
       let q = Lit 1 :|: Lit 2
       p --> q @?= Neg p :|: q
-  describe "<->" $ do
+  criterion "<->" 0.1 . passOrFail $ do
     it "is defined in terms of --> and :&:" $ do
       Lit 0 <-> Lit 1 @?= (Neg (Lit 0) :|: Lit 1) :&: (Neg (Lit 1) :|: Lit 0)
-  describe "distribute" $ do
+  criterion "distribute" 0.2 . passOrFail $ do
     it "correctly computes the base case (no :&: in operands)" $ do
       Prop.distribute (Lit 0) (Lit 1) @?= Lit 0 :|: Lit 1
       let lhs = parse "a | b | c | d"
@@ -53,7 +54,7 @@ tests = do
       let lhs' = parse "a & b & c"
       isCnf (Prop.distribute lhs' $ parse "c & d")     @?= True
       isCnf (Prop.distribute lhs' $ parse "c & d & e") @?= True
-  describe "cnf" $ do
+  criterion "cnf" 0.6 . passOrFail $ do
     it "keeps literals (and their negation)" $ do
       Prop.cnf (Lit 0)       @?= Lit 0
       Prop.cnf (Neg (Lit 0)) @?= Neg (Lit 0)

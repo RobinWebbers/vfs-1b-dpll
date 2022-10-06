@@ -4,38 +4,40 @@ module StateSpec
 
 import Test.Hspec
 import Test.HUnit
+import Rubric
+
 import Control.Monad.State
 import Prelude hiding (interact)
 
 import qualified State
 import State (TurnstileState (..), TurnstileOutput (..), Action (..))
 
-testCoin :: (TurnstileState -> (TurnstileOutput, TurnstileState)) -> Spec
-testCoin coin =
+testCoin :: (TurnstileState -> (TurnstileOutput, TurnstileState)) -> Rubric
+testCoin coin = passOrFail $ do
   it "opens and thanks" $ do
     coin Locked   @?= (Thank, Unlocked)
     coin Unlocked @?= (Thank, Unlocked)
 
-testPush :: (TurnstileState -> (TurnstileOutput, TurnstileState)) -> Spec
-testPush push =
+testPush :: (TurnstileState -> (TurnstileOutput, TurnstileState)) -> Rubric
+testPush push = passOrFail $ do
   it "opens only when payed, otherwise tuts" $ do
     push Locked   @?= (Tut,  Locked)
     push Unlocked @?= (Open, Locked)
 
-testInteract :: (TurnstileState -> Action -> (TurnstileOutput, TurnstileState)) -> Spec
-testInteract interact =
+testInteract :: (TurnstileState -> Action -> (TurnstileOutput, TurnstileState)) -> Rubric
+testInteract interact = passOrFail $ do
   it "correctly interacts with actions" $ do
     interact Locked   Coin @?= (Thank, Unlocked)
     interact Unlocked Coin @?= (Thank, Unlocked)
     interact Locked   Push @?= (Tut,   Locked)
     interact Unlocked Push @?= (Open,  Locked)
 
-tests :: Spec
-tests = do
+tests :: Rubric
+tests = distribute $ do
   let unwrap m st i = runState (m i) st
-  describe "coin"      $ testCoin     $ State.coin
-  describe "push"      $ testPush     $ State.push
-  describe "interact"  $ testInteract $ State.interact
-  describe "coin'"     $ testCoin     $ runState State.coin'
-  describe "push'"     $ testPush     $ runState State.push'
-  describe "interact'" $ testInteract $ unwrap State.interact'
+  distributed "coin"      $ testCoin     $ State.coin
+  distributed "push"      $ testPush     $ State.push
+  distributed "interact"  $ testInteract $ State.interact
+  distributed "coin'"     $ testCoin     $ runState State.coin'
+  distributed "push'"     $ testPush     $ runState State.push'
+  distributed "interact'" $ testInteract $ unwrap State.interact'
