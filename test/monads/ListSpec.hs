@@ -4,7 +4,7 @@ module ListSpec
 
 import Test.Hspec
 import Test.HUnit
-import Rubric
+import Test.Hrubric
 
 import qualified List
 import List (Sheep (..))

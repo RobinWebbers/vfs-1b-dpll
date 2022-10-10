@@ -4,7 +4,7 @@ module DPLLSpec
 
 import Test.Hspec
 import Test.HUnit
-import Rubric
+import Test.Hrubric
 
 import CNF
 

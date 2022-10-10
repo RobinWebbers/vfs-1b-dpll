@@ -1,7 +1,14 @@
 import Test.Hspec
 import Test.Hspec.Runner
+import Test.Hrubric
 import Test.HUnit
+
 import System.Environment
+import System.Console.ANSI
+import Text.Printf
+
+import Control.Monad
+import Data.Maybe
 
 -- Monad imports
 import qualified MaybeSpec
@@ -14,8 +21,6 @@ import qualified StateSpec
 import qualified PropSpec
 import qualified TseitinSpec
 import qualified DPLLSpec
-
-import Rubric
 
 rubric :: Rubric
 rubric = do
@@ -30,12 +35,24 @@ rubric = do
     distributed "Tseitin" TseitinSpec.tests
     distributed "DPLL"    DPLLSpec.tests
 
+-- Output the weight as grade
+output :: Float -> IO ()
+output g = do
+  let adj = min 1 (0.1 + g * 0.9)
+  let color = if adj > 0.55 then Green else Red
+  setSGR [SetConsoleIntensity BoldIntensity]
+  putStr "Your current grade is: ["
+  setSGR [SetColor Foreground Vivid color]
+  putStr $ printf "%.1f" (adj * 10)
+  setSGR [Reset, SetConsoleIntensity BoldIntensity]
+  putStr $ "/10.0]\n"
+
+  codegrade <- lookupEnv "CODEGRADE"
+  when (isJust codegrade) $ putStrLn (printf "%.2f" adj)
+
 main :: IO ()
 main = do
-  args <- getArgs
-  cfg <- readConfig defaultConfig args
-  let (criteria, spec) = evalRubricM rubric
-  (cfg', forest) <- evalSpec cfg spec
-  result <- withArgs [] $ runSpecForest forest cfg'
-  print $ grade criteria result
-  evaluateResult result
+  result <- hrubric rubric
+  case result of
+    Left p -> putStrLn $ "Error in rubric nesting: " ++ p
+    Right g -> output g

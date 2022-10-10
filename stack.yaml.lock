@@ -25,6 +25,17 @@ packages:
       size: 828
   original:
     hackage: hspec-discover-2.10.6@sha256:df63254c5aa8c5c2b9233b0067728394936b6c9af7e3a5d3d44df78d888dcefd,2167
+- completed:
+    commit: 6ad7ef80526551efac880887a959b8ce5e843587
+    git: https://github.com/RobinWebbers/hrubric.git
+    name: hrubric
+    pantry-tree:
+      sha256: 1e8aa05f85c3116f046f7e4560ab42ba26d395ed0a214e45e6a2f6ce71de02fc
+      size: 516
+    version: 0.1.0.0
+  original:
+    commit: 6ad7ef80526551efac880887a959b8ce5e843587
+    git: https://github.com/RobinWebbers/hrubric.git
 snapshots:
 - completed:
     sha256: 1ecad1f0bd2c27de88dbff6572446cfdf647c615d58a7e2e2085c6b7dfc04176

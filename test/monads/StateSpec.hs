@@ -4,7 +4,7 @@ module StateSpec
 
 import Test.Hspec
 import Test.HUnit
-import Rubric
+import Test.Hrubric
 
 import Control.Monad.State
 import Prelude hiding (interact)

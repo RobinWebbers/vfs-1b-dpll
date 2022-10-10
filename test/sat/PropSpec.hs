@@ -4,7 +4,7 @@ module PropSpec
 
 import Test.Hspec
 import Test.HUnit
-import Rubric
+import Test.Hrubric
 
 import qualified Prop
 import Prop (Prop (..), (-->), (<->))

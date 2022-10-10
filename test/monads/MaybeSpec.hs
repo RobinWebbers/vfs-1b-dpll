@@ -4,7 +4,7 @@ module MaybeSpec
 
 import Test.Hspec
 import Test.HUnit
-import Rubric
+import Test.Hrubric
 
 import qualified Maybe
 

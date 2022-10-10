@@ -4,7 +4,7 @@ module TseitinSpec
 
 import Test.Hspec
 import Test.HUnit
-import Rubric
+import Test.Hrubric
 
 import Data.List (find)
 import qualified Tseitin

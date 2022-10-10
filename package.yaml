@@ -71,3 +71,5 @@ tests:
     - hspec >=2.10.6
     - hspec-core >= 2.10.6
     - HUnit
+    - hrubric
+    - ansi-terminal
