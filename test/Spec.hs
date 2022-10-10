@@ -46,7 +46,9 @@ output g = do
   putStr $ printf "%.1f" (adj * 10)
   setSGR [Reset, SetConsoleIntensity BoldIntensity]
   putStr $ "/10.0]\n"
+  setSGR [Reset]
 
+  -- Output the weight as a grade between 0 and 1 for codegrade
   codegrade <- lookupEnv "CODEGRADE"
   when (isJust codegrade) $ putStrLn (printf "%.2f" adj)
 
