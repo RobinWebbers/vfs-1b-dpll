@@ -50,7 +50,7 @@ output g = do
 
   -- Output the weight as a grade between 0 and 1 for codegrade
   codegrade <- lookupEnv "CG_INFO"
-  when (isJust codegrade) $ putStrLn (printf "%.2f" adj)
+  when (isJust codegrade) $ print adj
 
 main :: IO ()
 main = do
