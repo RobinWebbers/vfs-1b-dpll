@@ -49,12 +49,12 @@ output g = do
   setSGR [Reset]
 
   -- Output the weight as a grade between 0 and 1 for codegrade
-  codegrade <- lookupEnv "CODEGRADE"
+  codegrade <- lookupEnv "CG_INFO"
   when (isJust codegrade) $ putStrLn (printf "%.2f" adj)
 
 main :: IO ()
 main = do
   result <- hrubric rubric
   case result of
-    Left p -> putStrLn $ "Error in rubric nesting: " ++ p
+    Left p -> putStrLn $ "Error in rubric nesting: '" ++ p ++ "'"
     Right g -> output g
